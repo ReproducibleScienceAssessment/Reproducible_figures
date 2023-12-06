@@ -27,10 +27,10 @@ First, install all packages and load the libraries for the analysis
 ```{r}
 knitr::opts_chunk$set(echo = FALSE)
 
-install.packages("ggplot2")
-install.packages("palmerpenguins")
-install.packages("janitor")
-install.packages("dplyr")
+#install.packages("ggplot2")
+#install.packages("palmerpenguins")
+#install.packages("janitor")
+#install.packages("dplyr")
 
 library(ggplot2)
 library(palmerpenguins)
@@ -153,7 +153,7 @@ filter_by_species <- function(penguins_clean, Chinstrap){
   
 chinstrap_data<-filter_by_species(penguins_clean, "Chinstrap")
 
-#Now we are going to generate an exploratory plot to show the distribution of the data 
+#Now chinstrap_data#Now we are going to generate an exploratory plot to show the distribution of the data 
 
 chinstrap_plot<- ggplot(chinstrap_data, 
        aes(x=culmen_length_mm, 
@@ -162,6 +162,7 @@ chinstrap_plot<- ggplot(chinstrap_data,
   labs(y = "Culmen Depth (mm)",
        x = "Culmen Length (mm)", 
        title = "Exploring associations between Culmen Depth and Culmen Length")
+
 chinstrap_plot
 
 ggsave(chinstrap_plot, 
@@ -175,11 +176,19 @@ ggsave(chinstrap_plot,
 
 There are likely mechanical constraints on the evolution of bills in penguins bill sizes due to a correlation between the bill culmen length and depth.
 
-Hypothesis: *there is a correlation between the culmen length and depth of Chinstrap penguins' bills*
+H0 = *there is no relationship between the culmen length and depth of Chinstrap penguins' bills*
+
+HA = *there is a correlation between the culmen length and depth of Chinstrap penguins' bills*
 
 ### Statistical Methods
 
-We are going to test the correlation between these variables using a Pearson's correlation coefficient. We are first going to use a linear regression and QQplot to see if the data is normally distributed and has a linear relationship. This allows us to test the assumptions of the statistical test
+We are going to test the correlation between these variables using a Pearson's correlation coefficient. We are first going to use a linear regression and QQplot to see if the data is normally distributed and has a linear relationship.
+
+Assumptions of Pearson's correlation:
+
+1.  Linearity
+2.  Normality
+3.  No outliers and random sample
 
 ```{r statistics}
 chinstrap_model <- lm(culmen_length_mm ~ culmen_depth_mm, data = chinstrap_data)
@@ -189,11 +198,17 @@ summary(chinstrap_model)
 
 #we can use the linear regression to plot the quantiles and see if they are normally distributed. Most quantiles are on the line therefore, our assumptions are met 
 plot(chinstrap_model, which=2)
+plot(chinstrap_model, which=1)
+
 ```
+
+-   Linearity - shown in plot 2 (which=1) where the residuals are not clustered around the line in any pattern, therefore, we can assume linearity \
+
+-   Normality - shown in plot 1 (which=2), each point is close to the line, suggesting that the data is normally distributed
 
 Performing the Pearson's correlation test:
 
-```{r statistics}
+```{r}
 #we are now going to perform a Pearson's correlation test to find the correlation coefficient of the data 
 chinstrap_data
 cor.test(chinstrap_data$culmen_length_mm, chinstrap_data$culmen_depth_mm)
@@ -218,8 +233,6 @@ ggplot(chinstrap_data, aes(x = culmen_length_mm, y = culmen_depth_mm)) +
 theme_bw()+
   theme(
     plot.title=element_text(size = 10))
-  
-
 ```
 
 ### Discussion
@@ -231,6 +244,46 @@ The correlation between the two features is most likely genetic as there are phy
 ### Conclusion
 
 We can conclude from this analysis that there is a strong positive correlation between culmen length and culmen depth. This was to be expected because due to mechanical limitations within the bill, evolution of each feature is likely to be constrained by the other. However, this has only been proven in a single species therefore, applying this research to other species would show if this trend is universal across all species.
+
+## QUESTION 3: Open Science
+
+### a) GitHub
+
+*Upload your RProject you created for **Question 2** and any files and subfolders used to GitHub. Do not include any identifiers such as your name. Make sure your GitHub repo is public.*
+
+*GitHub link: <https://github.com/ReproducibleScienceAssessment/Reproducible_figures.git>*
+
+*You will be marked on your repo organisation and readability.*
+
+### b) Share your repo with a partner, download, and try to run their data pipeline.
+
+*Partner's GitHub link: <https://github.com/otter456/reproducible_figures_assignment>*
+
+*You **must** provide this so I can verify there is no plagiarism between you and your partner.*
+
+### c) Reflect on your experience running their code. (300-500 words)
+
+My partners code was well laid out with several comments inside and outside the code to explain each line is doing. They explain the process which they will follow clearly at the beginning of the document and followed it chronologically. The cleaning pipelines were easy to follow with step by step comments on how and what they were removing each time to generate the refined data set. Finally, they explained reasons for each filtering or renaming of the data which makes it replicable.
+
+There were no problems running my partners code.
+
+The code ran smoothly with all supplementary material including data sets and functions document provided on the repository and all packages needed were installed using code in the document. However, in order to make the code more reproducible it would help to have the code plotting the figures in the the main document so the connection between graph and function is easier to see. A second consideration might be to reduce each explanation per line to a condensed section explaining what the code chunk is doing, as too many notes can make the code chunk harder to follow when rewriting for a second experiment.
+
+In their code, it would be hard to alter their figures because the functions are coded in a separate document. As mentioned above, this makes it harder to distinguish which code is for which graph and requires copying code from one document or editing in another document in order to change their figures. However, keeping a functions document makes the code tidier when focusing on the study.
+
+-   *What elements of your partner's code helped you to understand their data pipeline?*
+
+-   *Did it run? Did you need to fix anything?*
+
+-   *What suggestions would you make for improving their code to make it more understandable or reproducible, and why?*
+
+-   *If you needed to alter your partner's figure using their code, do you think that would be easy or difficult, and why?*
+
+### d) Reflect on your own code based on your experience with your partner's code and their review of yours. (300-500 words)
+
+-   *What improvements did they suggest, and do you agree?*
+
+-   *What did you learn about writing code for other people?*
 
 ------------------------------------------------------------------------
 

@@ -16,15 +16,11 @@ date: "2023-10-09"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-*The following is a template .rmd RMarkdown file for you to use for your homework submission.*
-
 *Please Knit your .rmd to a PDF format or HTML and submit that with no identifiers like your name.*
 
 *To create a PDF, first install tinytex and load the package. Then press the Knit arrow and select "Knit to PDF".*
 
 ## QUESTION 01: Data Visualisation for Science Communication
-
-*Create a figure using the Palmer Penguin dataset that is correct but badly communicates the data. **Do not make a boxplot**.*
 
 First, install all packages and load the libraries for the analysis
 
@@ -63,7 +59,6 @@ print(penguins_clean)
 
 colnames(penguins_clean)
 
-
 ```
 
 *Use the following references to guide you:*
@@ -87,7 +82,7 @@ geom_point(show.legend=FALSE, colour="yellow", size=2)+
 
 This graph is misleading based on three different factors:
 
-1.  The graph's axes do not begin at 0 which skews the data into a proportional relationship. This is suggests the relationship between flipper length and body mass is proportional. There are also no margin lines which, when combined with the colour, makes the data almost impossible to discern. \
+1.  The graph's axes do not begin at 0 which skews the data into a proportional relationship. This is suggests the relationship between flipper length and body mass is proportional. There are also no margin lines which, when combined with the colour, makes the data almost impossible to discern.\
 2.  The data points are not coloured by species. This suggests that any correlations are uniform across all species and that they all show this relationship or potentially introduces trends in the data which are not valid due to clustering of data points for each species. Furthermore, the colours are not pleasing and the data points are too large to distinguish between individual points to pull information from the graph.\
 3.  There is no title explaining the focus or description of this study and both axes labels are not 'human friendly' making it hard to read and understand. This means it is hard to interpret the data in a useful way and takes much longer to understand what data is being presented in the graph\
 4.  Finally, with no regression or correlation analysis, this graph suggests a relationship which has not been investigated, and without proper titles or context, it could result in false assumptions being made.
@@ -192,7 +187,7 @@ Hypothesis: *there is a correlation between the culmen length and depth of Chins
 
 ### Statistical Methods
 
-We are going to use a linear regression and qqplot to see if the data is normally distributed and has a linear relationship. This allows us to test the assumptions of the Pearson correlation coefficient test.
+We are going to test the correlation between these variables using a Pearson's correlation coefficient. We are first going to use a linear regression and QQplot to see if the data is normally distributed and has a linear relationship. This allows us to test the assumptions of the statistical test
 
 ```{r statistics}
 chinstrap_model <- lm(culmen_length_mm ~ culmen_depth_mm, data = chinstrap_data)
@@ -204,13 +199,15 @@ summary(chinstrap_model)
 plot(chinstrap_model, which=2)
 ```
 
+Performing the Pearson's correlation test:
+
 ```{r statistics}
 #we are now going to perform a Pearson's correlation test to find the correlation coefficient of the data 
 chinstrap_data
 cor.test(chinstrap_data$culmen_length_mm, chinstrap_data$culmen_depth_mm)
 ```
 
-### Results 
+### Results
 
 The Pearson's correlation coefficient (r=0.6535, p=1.526x10\^(9)) shows that there is a significant strong positive correlation between the culmen length and depth. This is confirmed by the test statistic (t=7.0146) which shows the strong correlation. Furthermore, the 95% confidence intervals [0.4917326, 0.7717134] show that the correlation coefficient can never be 0 therefore, it is significant.
 
@@ -299,13 +296,13 @@ We can conclude from this analysis that there is a strong positive correlation b
 
 *Upload your RProject you created for **Question 2** and any files and subfolders used to GitHub. Do not include any identifiers such as your name. Make sure your GitHub repo is public.*
 
-*GitHub link:*
+*GitHub link: <https://github.com/ReproducibleScienceAssessment/Reproducible_figures.git>*
 
 *You will be marked on your repo organisation and readability.*
 
 ### b) Share your repo with a partner, download, and try to run their data pipeline.
 
-*Partner's GitHub link:*
+*Partner's GitHub link: <https://github.com/otter456/reproducible_figures_assignment>*
 
 *You **must** provide this so I can verify there is no plagiarism between you and your partner.*
 

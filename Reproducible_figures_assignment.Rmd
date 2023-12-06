@@ -1,0 +1,326 @@
+---
+title: "Reproducible_Figures_Assignment"
+output: pdf_document
+date: "2023-12-04"
+---
+
+---
+title: "Homework Template"
+output:
+  html_document: default
+  pdf_document: default
+date: "2023-10-09"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+*The following is a template .rmd RMarkdown file for you to use for your homework submission.*
+
+*Please Knit your .rmd to a PDF format or HTML and submit that with no identifiers like your name.*
+
+*To create a PDF, first install tinytex and load the package. Then press the Knit arrow and select "Knit to PDF".*
+
+## QUESTION 01: Data Visualisation for Science Communication
+
+*Create a figure using the Palmer Penguin dataset that is correct but badly communicates the data. **Do not make a boxplot**.*
+
+First, install all packages and load the libraries for the analysis
+
+```{r}
+knitr::opts_chunk$set(echo = FALSE)
+
+install.packages("ggplot2")
+install.packages("palmerpenguins")
+install.packages("janitor")
+install.packages("dplyr")
+
+library(ggplot2)
+library(palmerpenguins)
+library(janitor)
+library(dplyr)
+library(tidyverse)
+
+```
+
+Then we are going to load our data and clean it
+
+```{r, echo=FALSE, results=FALSE}
+
+write.csv(penguins_raw, "data/penguins_raw.csv")
+
+penguins_raw <-read.csv("data/penguins_raw.csv")
+
+penguins_clean <- penguins_raw %>%
+  select(-starts_with("Delta")) %>%
+  select(-Comments) %>%
+  clean_names()
+
+write.csv(penguins_clean, "data/penguins_clean.csv")
+
+print(penguins_clean)
+
+colnames(penguins_clean)
+
+
+```
+
+*Use the following references to guide you:*
+
+-   [*https://www.nature.com/articles/533452a*](https://www.nature.com/articles/533452a){.uri}
+-   [*https://elifesciences.org/articles/16800*](https://elifesciences.org/articles/16800){.uri}
+
+### a) Provide your figure here:
+
+```{r bad figure code, echo= FALSE}
+
+ggplot(penguins_clean, 
+       aes(x=flipper_length_mm, 
+           y=body_mass_g))+
+geom_point(show.legend=FALSE, colour="yellow", size=2)+
+  theme_classic()
+ 
+```
+
+### b) Write about how your design choices mislead the reader about the underlying data (200-300 words).
+
+This graph is misleading based on three different factors:
+
+1.  The graph's axes do not begin at 0 which skews the data into a proportional relationship. This is suggests the relationship between flipper length and body mass is proportional. There are also no margin lines which, when combined with the colour, makes the data almost impossible to discern. \
+2.  The data points are not coloured by species. This suggests that any correlations are uniform across all species and that they all show this relationship or potentially introduces trends in the data which are not valid due to clustering of data points for each species. Furthermore, the colours are not pleasing and the data points are too large to distinguish between individual points to pull information from the graph.\
+3.  There is no title explaining the focus or description of this study and both axes labels are not 'human friendly' making it hard to read and understand. This means it is hard to interpret the data in a useful way and takes much longer to understand what data is being presented in the graph\
+4.  Finally, with no regression or correlation analysis, this graph suggests a relationship which has not been investigated, and without proper titles or context, it could result in false assumptions being made.
+
+References:
+
+Divecha, CA. Tullu, MS. Karande, S 2023. 'Utilizing *tables, figures, charts and graphs to enhance the readability of a research paper'.* J Postgrad Med. Available at: <https://pubmed.ncbi.nlm.nih.gov/22305731/>
+
+Schriger, DL. Cooper, RJ. 2000. *'Achieving graphical excellence: suggestions and methods for creating high-quality visual displays of experimental data'.* Annals of Emergency Medicine, Vol 37 Issue 1. Available at: <https://www.sciencedirect.com/science/article/abs/pii/S0196064401750639>
+
+Baker, M. 2016. '*1500 scientists lift the lid on reproducibility'*. Nature 533, 452-454. Available at: <https://www.nature.com/articles/533452a>
+
+------------------------------------------------------------------------
+
+## QUESTION 2: Data Pipeline
+
+------------------------------------------------------------------------
+
+### Introduction
+
+Today we are going to be exploring the relationship between Culmen length and depth in Chinstrap penguins on the Dream island. We will be investigating correlations between the Culmen length and Culmen depth to see if there is a trade-off between length and depth, and if they have evolved together due to mechanistic limitations imposed by the beaks functionality.
+
+Method:
+
+1.  Clean data using several functions
+2.  Save clean data set
+3.  Subset data so it only includes Chinstrap penguins
+4.  Plot graph to show exploratory relationship
+5.  Save graph
+
+```{r Data Exploration}
+
+write.csv(penguins_raw, "data/penguins_raw.csv")
+
+penguins_raw <-read.csv("data/penguins_raw.csv")
+
+#first we are going to generate a series of functions which we can use to clean the data 
+# 1.shortening the species names 
+# 2. removings NAs from the data 
+
+#we are then going to using piping to add a number of functions together to clean the raw data and create our 'penguins_clean' data set 
+
+shorten_species <- function(penguins_raw) {
+  penguins_raw %>%
+    mutate(species = case_when(
+      species == "Adelie Penguin (Pygoscelis adeliae)" ~ "Adelie",
+      species == "Chinstrap penguin (Pygoscelis antarctica)" ~ "Chinstrap",
+      species == "Gentoo penguin (Pygoscelis papua)" ~ "Gentoo"
+    ))
+}
+
+remove_NA <- function(penguins_raw) {
+  penguins_raw %>%
+    na.omit()
+}
+
+penguins_clean <- penguins_raw %>%
+  select(-starts_with("Delta")) %>%
+  select(-Comments) %>%
+  clean_names()%>%
+  shorten_species()%>%
+  remove_NA()
+
+#now we are going to save the clean data set 
+
+write.csv(penguins_clean, "data/penguins_clean.csv")
+
+head(penguins_clean)
+
+#Now we are going to subset the data so we are only looking at Chinstrap penguins 
+filter_by_species <- function(penguins_clean, Chinstrap){
+  penguins_clean %>%
+    filter(species == Chinstrap) 
+}
+  
+chinstrap_data<-filter_by_species(penguins_clean, "Chinstrap")
+print(chinstrap_data)
+
+#Now we are going to generate an exploratory plot to show the distribution of the data 
+
+chinstrap_plot<- ggplot(chinstrap_data, 
+       aes(x=culmen_length_mm, 
+           y=culmen_depth_mm))+
+       geom_point(colour = "orange", size=1.5)+
+  labs(y = "Culmen Depth (mm)",
+       x = "Culmen Length (mm)", 
+       title = "Exploring associations between Culmen Depth and Culmen Length")
+chinstrap_plot
+
+ggsave(chinstrap_plot, 
+       filename = "chinstrap_plot.pdf",
+       device = "pdf")
+
+
+```
+
+### Hypothesis
+
+There are likely mechanical constraints on the evolution of bills in penguins bill sizes due to a correlation between the bill culmen length and depth.
+
+Hypothesis: *there is a correlation between the culmen length and depth of Chinstrap penguins' bills*
+
+### Statistical Methods
+
+We are going to use a linear regression and qqplot to see if the data is normally distributed and has a linear relationship. This allows us to test the assumptions of the Pearson correlation coefficient test.
+
+```{r statistics}
+chinstrap_model <- lm(culmen_length_mm ~ culmen_depth_mm, data = chinstrap_data)
+
+#this shows a summary of the models output 
+summary(chinstrap_model)
+
+#we can use the linear regression to plot the quantiles and see if they are normally distributed. Most quantiles are on the line therefore, our assumptions are met 
+plot(chinstrap_model, which=2)
+```
+
+```{r statistics}
+#we are now going to perform a Pearson's correlation test to find the correlation coefficient of the data 
+chinstrap_data
+cor.test(chinstrap_data$culmen_length_mm, chinstrap_data$culmen_depth_mm)
+```
+
+### Results 
+
+The Pearson's correlation coefficient (r=0.6535, p=1.526x10\^(9)) shows that there is a significant strong positive correlation between the culmen length and depth. This is confirmed by the test statistic (t=7.0146) which shows the strong correlation. Furthermore, the 95% confidence intervals [0.4917326, 0.7717134] show that the correlation coefficient can never be 0 therefore, it is significant.
+
+Finally, we are going to plot the results:
+
+```{r Plotting Results}
+
+ggplot(chinstrap_data, aes(x = culmen_length_mm, y = culmen_depth_mm)) +
+  geom_point(colour="orange") +
+  geom_smooth(method = "lm", colour = "pink", se=FALSE)+
+  labs(
+    title = "Regression showing the correlation between Culmen Length and Culmen Depth in Chinstrap Penguins",
+    x = "Culmen Length (mm)",
+    y = "Culmen Depth (mm)",
+  )+
+theme_bw()+
+  theme(
+    plot.title=element_text(size = 10))
+  
+
+```
+
+### Discussion
+
+Our results showed a positive correlation between the two features. This suggests that as the culmen length increases, so does the culmen depth, implying that there is a mechanistic link between the two which is required for a functional bill. These findings underscore the meaningful connection between these two features in chinstrap penguins, shedding light on their physical characteristics and ecological adaptations.
+
+The correlation between the two features is most likely genetic as there are physiological constraints on the length and depth of the bill in order for it to function properly. Penguins use bills to hunt, catch fish, preen, and defend themselves against predators therefore, it needs to be robust so it can withstand impact, but also delicate and mobile to catch fish and preen their feathers. Therefore, correlations between the depth and length of the bill are expected in order to generate a bill that is functional for these fundamental tasks.
+
+### Conclusion
+
+We can conclude from this analysis that there is a strong positive correlation between culmen length and culmen depth. This was to be expected because due to mechanical limitations within the bill, evolution of each feature is likely to be constrained by the other. However, this has only been proven in a single species therefore, applying this research to other species would show if this trend is universal across all species.
+
+------------------------------------------------------------------------
+
+# Instructions for Assessment below:
+
+## QUESTION 2: Data Pipeline
+
+*Write a data analysis pipeline in your .rmd RMarkdown file. You should be aiming to write a clear explanation of the steps, the figures visible, as well as clear code.*
+
+*Your code should include the steps practiced in the lab session:*
+
+-   *Load the data*
+
+-   *Appropriately clean the data*
+
+-   *Create an Exploratory Figure (**not a boxplot**)*
+
+-   *Save the figure*
+
+-   ***New**: Run a statistical test*
+
+-   ***New**: Create a Results Figure*
+
+-   *Save the figure*
+
+*An exploratory figure shows raw data, such as the distribution of the data. A results figure demonstrates the stats method chosen, and includes the results of the stats test.*
+
+*Between your code, communicate clearly what you are doing and why.*
+
+*Your text should include:*
+
+-   *Introduction*
+
+-   *Hypothesis*
+
+-   *Stats Method*
+
+-   *Results*
+
+-   *Discussion*
+
+-   *Conclusion*
+
+*You will be marked on the following:*
+
+### a) Your code for readability and functionality
+
+### b) Your figures for communication
+
+### c) Your text communication of your analysis
+
+## QUESTION 3: Open Science
+
+### a) GitHub
+
+*Upload your RProject you created for **Question 2** and any files and subfolders used to GitHub. Do not include any identifiers such as your name. Make sure your GitHub repo is public.*
+
+*GitHub link:*
+
+*You will be marked on your repo organisation and readability.*
+
+### b) Share your repo with a partner, download, and try to run their data pipeline.
+
+*Partner's GitHub link:*
+
+*You **must** provide this so I can verify there is no plagiarism between you and your partner.*
+
+### c) Reflect on your experience running their code. (300-500 words)
+
+-   *What elements of your partner's code helped you to understand their data pipeline?*
+
+-   *Did it run? Did you need to fix anything?*
+
+-   *What suggestions would you make for improving their code to make it more understandable or reproducible, and why?*
+
+-   *If you needed to alter your partner's figure using their code, do you think that would be easy or difficult, and why?*
+
+### d) Reflect on your own code based on your experience with your partner's code and their review of yours. (300-500 words)
+
+-   *What improvements did they suggest, and do you agree?*
+
+-   *What did you learn about writing code for other people?*

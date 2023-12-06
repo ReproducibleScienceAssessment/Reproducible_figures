@@ -40,7 +40,7 @@ library(tidyverse)
 
 ```
 
-Then we are going to load our data and clean it
+Now we are going to load our data and clean it
 
 ```{r, echo=FALSE, results=FALSE}
 
@@ -60,11 +60,6 @@ print(penguins_clean)
 colnames(penguins_clean)
 
 ```
-
-*Use the following references to guide you:*
-
--   [*https://www.nature.com/articles/533452a*](https://www.nature.com/articles/533452a){.uri}
--   [*https://elifesciences.org/articles/16800*](https://elifesciences.org/articles/16800){.uri}
 
 ### a) Provide your figure here:
 

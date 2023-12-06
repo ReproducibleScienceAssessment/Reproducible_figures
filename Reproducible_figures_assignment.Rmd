@@ -55,8 +55,6 @@ penguins_clean <- penguins_raw %>%
 
 write.csv(penguins_clean, "data/penguins_clean.csv")
 
-print(penguins_clean)
-
 colnames(penguins_clean)
 
 ```
@@ -154,7 +152,6 @@ filter_by_species <- function(penguins_clean, Chinstrap){
 }
   
 chinstrap_data<-filter_by_species(penguins_clean, "Chinstrap")
-print(chinstrap_data)
 
 #Now we are going to generate an exploratory plot to show the distribution of the data 
 

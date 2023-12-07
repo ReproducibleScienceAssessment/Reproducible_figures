@@ -1,3 +1,3 @@
 # Reproducible_figures
 
-This repository contains an R markdown file and two data files for the Reproducible Figures Assignment 
+This repository contains an R markdown file and two data files for the Reproducible Figures Assignment (Version control in Git)

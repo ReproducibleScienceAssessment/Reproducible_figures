@@ -16,10 +16,6 @@ date: "2023-10-09"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-*Please Knit your .rmd to a PDF format or HTML and submit that with no identifiers like your name.*
-
-*To create a PDF, first install tinytex and load the package. Then press the Knit arrow and select "Knit to PDF".*
-
 ## QUESTION 01: Data Visualisation for Science Communication
 
 First, install all packages and load the libraries for the analysis

@@ -24,7 +24,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 First, install all packages and load the libraries for the analysis
 
-```{r}
+```{r message=FALSE, warning=FALSE, include=FALSE, results=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 
 #install.packages("ggplot2")
@@ -42,7 +42,7 @@ library(tidyverse)
 
 Now we are going to load our data and clean it
 
-```{r, echo=FALSE, results=FALSE}
+```{r echo=TRUE, warning=FALSE}
 
 write.csv(penguins_raw, "data/penguins_raw.csv")
 
@@ -61,7 +61,7 @@ colnames(penguins_clean)
 
 ### a) Provide your figure here:
 
-```{r bad figure code, echo= FALSE}
+```{r bad figure code, echo= FALSE, warning=FALSE}
 
 ggplot(penguins_clean, 
        aes(x=flipper_length_mm, 
@@ -210,7 +210,6 @@ Performing the Pearson's correlation test:
 
 ```{r}
 #we are now going to perform a Pearson's correlation test to find the correlation coefficient of the data 
-chinstrap_data
 cor.test(chinstrap_data$culmen_length_mm, chinstrap_data$culmen_depth_mm)
 ```
 
@@ -220,7 +219,7 @@ The Pearson's correlation coefficient (r=0.6535, p=1.526x10\^(9)) shows that the
 
 Finally, we are going to plot the results:
 
-```{r Plotting Results}
+```{r Plotting Results, warning=FALSE}
 
 ggplot(chinstrap_data, aes(x = culmen_length_mm, y = culmen_depth_mm)) +
   geom_point(colour="orange") +
@@ -263,27 +262,31 @@ We can conclude from this analysis that there is a strong positive correlation b
 
 ### c) Reflect on your experience running their code. (300-500 words)
 
-My partners code was well laid out with several comments inside and outside the code to explain each line is doing. They explain the process which they will follow clearly at the beginning of the document and followed it chronologically. The cleaning pipelines were easy to follow with step by step comments on how and what they were removing each time to generate the refined data set. Finally, they explained reasons for each filtering or renaming of the data which makes it replicable.
-
-There were no problems running my partners code.
-
-The code ran smoothly with all supplementary material including data sets and functions document provided on the repository and all packages needed were installed using code in the document. However, in order to make the code more reproducible it would help to have the code plotting the figures in the the main document so the connection between graph and function is easier to see. A second consideration might be to reduce each explanation per line to a condensed section explaining what the code chunk is doing, as too many notes can make the code chunk harder to follow when rewriting for a second experiment.
-
-In their code, it would be hard to alter their figures because the functions are coded in a separate document. As mentioned above, this makes it harder to distinguish which code is for which graph and requires copying code from one document or editing in another document in order to change their figures. However, keeping a functions document makes the code tidier when focusing on the study.
-
 -   *What elements of your partner's code helped you to understand their data pipeline?*
+
+My partners code was well laid out with several comments inside and outside the code to explain each line is doing. They explain the process which they will follow clearly at the beginning of the document and followed it chronologically. The cleaning pipelines were easy to follow with step by step comments on how and what they were removing each time to generate the refined data set. Finally, they explained reasons for each filtering or renaming of the data which makes it replicable.
 
 -   *Did it run? Did you need to fix anything?*
 
+There were no problems running my partners code.
+
 -   *What suggestions would you make for improving their code to make it more understandable or reproducible, and why?*
 
--   *If you needed to alter your partner's figure using their code, do you think that would be easy or difficult, and why?*
+The code ran smoothly with all supplementary material including data sets and functions document provided on the repository and all packages needed were installed using code in the document. However, in order to make the code more reproducible it would help to have the code plotting the figures in the the main document so the connection between graph and function is easier to see. A second consideration might be to reduce each explanation per line to a condensed section explaining what the code chunk is doing, as too many notes can make the code chunk harder to follow when rewriting for a second experiment.
+
+-   *f you needed to alter your partner's figure using their code, do you think that would be easy or difficult, and why?*
+
+In their code, it would be hard to alter their figures because the functions are coded in a separate document. As mentioned above, this makes it harder to distinguish which code is for which graph and requires copying code from one document or editing in another document in order to change their figures. However, keeping a functions document makes the code tidier when focusing on the study.
 
 ### d) Reflect on your own code based on your experience with your partner's code and their review of yours. (300-500 words)
 
 -   *What improvements did they suggest, and do you agree?*
 
--   *What did you learn about writing code for other people?*
+My partner suggest to include separate folders containing cleaning functions and plotting functions which would be helpful to clean up my code and shows what I'm doing without using several lines of code to generate the function. Furthermore, there was a problem with the names of 2 of my chunks (they were called the same thing) which didn't allow the document to knit initially which my partner had to change. I agree with all of these changes and will begin to separate my code into a series of functions which can be used alongside the document.
+
+*What did you learn about writing code for other people?*
+
+Writing code for other people makes you focus on working methodically through each step and explaining how the code is changing the data. This is important as it ensures that you are also understanding the functions you are using and allows the work you are doing to be replicated by yourself and others. Writing code that will be used by someone else makes you focus on a number of different elements including keeping a consistent formatting style, modularization, and clear and descriptive documentation and variable names. This allows other people to follow the code easily, discriminate between which functions are being used and why, and break up the code into small, discernible chunks which can easily be modified based on the requirements of the reproduced experiment. This is helped by using pipelines and folders containing functions to keep the code cleanly and easily accessed by other collaborators.
 
 ------------------------------------------------------------------------
 
@@ -341,13 +344,13 @@ In their code, it would be hard to alter their figures because the functions are
 
 *Upload your RProject you created for **Question 2** and any files and subfolders used to GitHub. Do not include any identifiers such as your name. Make sure your GitHub repo is public.*
 
-*GitHub link: <https://github.com/ReproducibleScienceAssessment/Reproducible_figures.git>*
+*GitHub link:*
 
 *You will be marked on your repo organisation and readability.*
 
 ### b) Share your repo with a partner, download, and try to run their data pipeline.
 
-*Partner's GitHub link: <https://github.com/otter456/reproducible_figures_assignment>*
+*Partner's GitHub link:*
 
 *You **must** provide this so I can verify there is no plagiarism between you and your partner.*
 

@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 First, install all packages and load the libraries for the analysis
 
-```{r message=FALSE, warning=FALSE, include=FALSE, results=FALSE}
+```{r message=FALSE, warning=FALSE, results=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 
 #install.packages("ggplot2")
@@ -110,7 +110,7 @@ penguins_raw <-read.csv("data/penguins_raw.csv")
 
 #first we are going to generate a series of functions which we can use to clean the data 
 # 1.shortening the species names 
-# 2. removings NAs from the data 
+# 2.removings NAs from the data 
 
 #we are then going to using piping to add a number of functions together to clean the raw data and create our 'penguins_clean' data set 
 
@@ -139,17 +139,17 @@ penguins_clean <- penguins_raw %>%
 
 write.csv(penguins_clean, "data/penguins_clean.csv")
 
-head(penguins_clean)
-
-#Now we are going to subset the data so we are only looking at Chinstrap penguins 
+#Now we are going to subset the data so we are only looking at Chinstrap penguins, first create the function
 filter_by_species <- function(penguins_clean, Chinstrap){
   penguins_clean %>%
     filter(species == Chinstrap) 
 }
-  
+
+#now we are going to use the function to filter the data 
 chinstrap_data<-filter_by_species(penguins_clean, "Chinstrap")
 
-#Now chinstrap_data#Now we are going to generate an exploratory plot to show the distribution of the data 
+
+#We are going to generate an exploratory plot to show the distribution of the data 
 
 chinstrap_plot<- ggplot(chinstrap_data, 
        aes(x=culmen_length_mm, 
@@ -172,9 +172,9 @@ ggsave(chinstrap_plot,
 
 There are likely mechanical constraints on the evolution of bills in penguins bill sizes due to a correlation between the bill culmen length and depth.
 
-H0 = *there is no relationship between the culmen length and depth of Chinstrap penguins' bills*
+H0 = *there is no relationship between the culmen length (mm) and depth (mm) of Chinstrap penguins' bills*
 
-HA = *there is a correlation between the culmen length and depth of Chinstrap penguins' bills*
+HA = *there is a correlation between the culmen length (mm) and depth (mm) of Chinstrap penguins' bills*
 
 ### Statistical Methods
 
@@ -192,15 +192,15 @@ chinstrap_model <- lm(culmen_length_mm ~ culmen_depth_mm, data = chinstrap_data)
 #this shows a summary of the models output 
 summary(chinstrap_model)
 
-#we can use the linear regression to plot the quantiles and see if they are normally distributed. Most quantiles are on the line therefore, our assumptions are met 
+#we can use the linear regression to plot the quantiles and see if they are normally distributed. 
 plot(chinstrap_model, which=2)
 plot(chinstrap_model, which=1)
 
 ```
 
--   Linearity - shown in plot 2 (which=1) where the residuals are not clustered around the line in any pattern, therefore, we can assume linearity \
+-   Normality - shown in plot 1 (which=2), each point is close to the line, suggesting that the data is normally distributed \
 
--   Normality - shown in plot 1 (which=2), each point is close to the line, suggesting that the data is normally distributed
+-   Linearity - shown in plot 2 (which=1) where the residuals are not clustered around the line in any pattern, therefore, we can assume linearity
 
 Performing the Pearson's correlation test:
 
@@ -211,7 +211,7 @@ cor.test(chinstrap_data$culmen_length_mm, chinstrap_data$culmen_depth_mm)
 
 ### Results
 
-The Pearson's correlation coefficient (r=0.6535, p=1.526x10\^(9)) shows that there is a significant strong positive correlation between the culmen length and depth. This is confirmed by the test statistic (t=7.0146) which shows the strong correlation. Furthermore, the 95% confidence intervals [0.4917326, 0.7717134] show that the correlation coefficient can never be 0 therefore, it is significant.
+The Pearson's correlation coefficient (r=0.6535, p=1.526x10\^(9)) shows that there is a significant strong positive correlation between the culmen length and depth. The large test statistic (t=7.0146) further confirms this strong correlation. Furthermore, the 95% confidence intervals [0.4917326, 0.7717134] show that the correlation coefficient can never be 0 therefore, it is significant.
 
 Finally, we are going to plot the results:
 
